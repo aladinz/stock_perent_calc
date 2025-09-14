@@ -70,10 +70,10 @@ A comprehensive, modern web application for stock analysis featuring real-time p
 ### **Local Development**
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/stock-price-calculator.git
+git clone https://github.com/aladinz/stock_perent_calc.git
 
 # Navigate to project directory
-cd stock-price-calculator
+cd stock_perent_calc
 
 # Start local server (choose one):
 npx http-server -p 8000
@@ -118,7 +118,7 @@ http://localhost:8000
 1. Create a new repository on GitHub
 2. Upload your files to the main branch
 3. Enable GitHub Pages in repository settings
-4. Your app will be live at: `https://yourusername.github.io/repository-name`
+4. Your app will be live at: `https://aladinz.github.io/stock_perent_calc`
 
 ### **Netlify** (Automatic Deployment)
 1. Connect your GitHub repository to Netlify
