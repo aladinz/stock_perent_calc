@@ -28,7 +28,6 @@
   "scripts": {
     "start": "npx http-server -p 8000 -c-1",
     "dev": "npx http-server -p 3000 -c-1 -o",
-    "build": "echo 'No build process needed - static files ready for deployment'",
     "deploy": "echo 'Ready for GitHub Pages, Netlify, or Vercel deployment'",
     "serve": "npx http-server . -p 8080 -c-1"
   },
