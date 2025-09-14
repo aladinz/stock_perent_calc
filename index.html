@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Calculator - Professional Trading Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-main">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">📈</div>
+                    <h1>Stock Price Calculator</h1>
+                    <p>Professional stock analysis with real-time alerts and projections</p>
+                </div>
+                <div class="header-controls">
+                    <!-- Market Status Indicator - Always Visible -->
+                    <div id="market-status" class="market-status">
+                        <div class="status-indicator">
+                            <span id="market-status-dot" class="status-dot"></span>
+                            <span id="market-status-text" class="status-text">Market Status</span>
+                        </div>
+                        <div id="market-next-event" class="next-event">Loading...</div>
+                    </div>
+                    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                        <span class="dark-mode-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stock Input Section -->
+        <section class="input-section">
+            <div class="intro-message">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; padding: 16px 24px; background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%); border-radius: 12px; border: 1px solid #4fc3f7;">
+                    <span style="font-size: 1.5rem;">🚀</span>
+                    <div style="text-align: left;">
+                        <div style="font-weight: 600; color: #0277bd; margin-bottom: 4px;">Fully Functional Offline!</div>
+                        <div style="color: #0288d1; font-size: 0.9em;">Try: <strong>AAPL</strong>, <strong>GOOGL</strong>, <strong>TSLA</strong>, <strong>MSFT</strong>, or <strong>DEMO</strong></div>
+                    </div>
+                </div>
+            </div>
+            <form id="stock-form">
+                <div class="input-group">
+                    <div class="search-input-container">
+                        <input 
+                            type="text" 
+                            id="ticker-input" 
+                            placeholder="Try: AAPL, GOOGL, TSLA, or DEMO" 
+                            required
+                            autocomplete="off"
+                        >
+                        <button type="submit" id="search-btn">Get Price</button>
+                        
+                        <!-- Recent Searches Dropdown -->
+                        <div id="recent-searches-dropdown" class="recent-searches-dropdown hidden">
+                            <div class="dropdown-header">
+                                <span>Recent Searches</span>
+                                <button type="button" id="clear-recent" class="clear-recent">Clear</button>
+                            </div>
+                            <ul id="recent-searches-list" class="recent-searches-list">
+                                <!-- Recent searches will be populated here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Loading and Error States -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Loading stock data...</p>
+        </div>
+        
+        <div id="error-message" class="error-message hidden">
+            <p id="error-text"></p>
+        </div>
+
+        <!-- Stock Data Display -->
+        <section id="stock-display" class="stock-display hidden">
+            <div class="stock-header">
+                <h2 id="stock-symbol"></h2>
+                <div class="stock-info">
+                    <span id="stock-name" class="stock-name"></span>
+                    <span id="stock-sector" class="stock-sector"></span>
+                </div>
+                <div class="data-indicator">
+                    <span id="data-status" class="data-status">📊 Static Data</span>
+                    <span id="last-updated" class="last-updated">Updated: Sept 14, 2025</span>
+                </div>
+            </div>
+            
+            <div class="price-overview">
+                <div class="current-price-section">
+                    <div class="price-info">
+                        <span class="current-price-label">Current Price:</span>
+                        <span id="current-price" class="price-value">$0.00</span>
+                    </div>
+                    <div class="daily-change">
+                        <span id="daily-change-value" class="change-value">$0.00</span>
+                        <span id="daily-change-percent" class="change-percent">(0.00%)</span>
+                    </div>
+                </div>
+                
+                <div class="stock-metrics-grid">
+                    <div class="metric-group">
+                        <h4 class="group-title">Trading Data</h4>
+                        <div class="metric-row">
+                            <span class="metric-label">Day's Range:</span>
+                            <span id="day-range" class="metric-value">$0.00 - $0.00</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">52W High:</span>
+                            <span id="week-high" class="metric-value">$0.00</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">52W Low:</span>
+                            <span id="week-low" class="metric-value">$0.00</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">Volume:</span>
+                            <span id="volume" class="metric-value">—</span>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-group">
+                        <h4 class="group-title">Financial Metrics</h4>
+                        <div class="metric-row">
+                            <span class="metric-label">Market Cap:</span>
+                            <span id="market-cap" class="metric-value">—</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">P/E Ratio:</span>
+                            <span id="pe-ratio" class="metric-value">—</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">1Y Target Est:</span>
+                            <span id="target-price" class="metric-value target-estimate">—</span>
+                        </div>
+                        <div class="metric-row earnings-row">
+                            <span class="metric-label">Next Earnings:</span>
+                            <span id="earnings-date" class="metric-value earnings-value">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>30-Day Price History</h3>
+                <canvas id="price-chart" width="400" height="200"></canvas>
+            </div>
+            
+            <div class="last-updated">
+                Last updated: <span id="last-updated"></span>
+            </div>
+        </section>
+
+        <!-- Price Projection Calculator (Shown after stock data is loaded) -->
+        <section id="projection-section" class="projection-section hidden">
+            <div class="projections-container">
+                <h3>Price Projection Calculator</h3>
+                <div id="projection-calculator-notice" class="projection-notice">
+                    <p>🧮 Enter a stock ticker above to start calculating price projections</p>
+                </div>
+                <div class="projection-controls">
+                    <!-- Real-time projection calculator with manual calculate option -->
+                    <div class="projection-input-group">
+                        <label for="projection-type">Price Change:</label>
+                        <select id="projection-type">
+                            <option value="drop">Price drops by</option>
+                            <option value="rise">Price rises by</option>
+                        </select>
+                    </div>
+                    <div class="projection-input-group">
+                        <label for="projection-percentage">Percentage:</label>
+                        <input type="number" id="projection-percentage" min="1" max="100" value="5" placeholder="5">
+                        <span>%</span>
+                    </div>
+                    <button id="calculate-projection-btn" type="button">Calculate</button>
+                </div>
+                
+                <div id="projection-result" class="projection-result hidden">
+                    <div class="projection-card">
+                        <div class="projection-header">
+                            <span id="projection-change-display">+5%</span>
+                            <span id="projection-type-display">Price Rise</span>
+                        </div>
+                        <div class="projection-values">
+                            <div class="projection-value">
+                                <label>Projected Price:</label>
+                                <span id="projected-price-display" class="price-value">$0.00</span>
+                            </div>
+                            <div class="projection-value">
+                                <label>Difference:</label>
+                                <span id="projected-difference-display" class="difference-value">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alerts Section -->
+        <section id="alerts-section" class="alerts-section hidden">
+            <h3>Price Alerts</h3>
+            <div class="alert-controls">
+                <div class="alert-input-group">
+                    <label for="alert-type">Alert Type:</label>
+                    <select id="alert-type">
+                        <option value="drop">Price drops by</option>
+                        <option value="rise">Price rises by</option>
+                    </select>
+                </div>
+                <div class="alert-input-group">
+                    <label for="alert-percentage">Percentage:</label>
+                    <input type="number" id="alert-percentage" min="1" max="50" placeholder="10">
+                    <span>%</span>
+                </div>
+                <button id="set-alert-btn" type="button">Set Alert</button>
+            </div>
+            
+            <div id="active-alerts" class="active-alerts">
+                <h4>Active Alerts</h4>
+                <div id="alerts-list" class="alerts-list">
+                    <!-- Active alerts will be displayed here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Auto-refresh Controls -->
+        <section id="refresh-section" class="refresh-section hidden">
+            <h3>Auto-Refresh Settings</h3>
+            <div class="refresh-controls">
+                <label for="refresh-interval">Update every:</label>
+                <select id="refresh-interval">
+                    <option value="60">1 minute</option>
+                    <option value="300" selected>5 minutes</option>
+                    <option value="600">10 minutes</option>
+                    <option value="1800">30 minutes</option>
+                </select>
+                <button id="toggle-refresh-btn" type="button" class="refresh-btn">Start Auto-Refresh</button>
+            </div>
+            <div class="refresh-status">
+                <span id="refresh-status">Auto-refresh: OFF</span>
+            </div>
+        </section>
+
+        <!-- Notification Permission -->
+        <div id="notification-prompt" class="notification-prompt hidden">
+            <p>Enable desktop notifications to receive price alerts?</p>
+            <button id="enable-notifications" type="button">Enable Notifications</button>
+            <button id="dismiss-notifications" type="button">No Thanks</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

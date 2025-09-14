@@ -1,0 +1,51 @@
+{
+  "name": "professional-stock-calculator",
+  "version": "2.0.0",
+  "description": "Professional stock analysis dashboard with real-time data, charts, and financial metrics",
+  "main": "index.html",
+  "homepage": ".",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/stock-price-calculator.git"
+  },
+  "keywords": [
+    "stock",
+    "finance",
+    "calculator",
+    "trading",
+    "dashboard",
+    "charts",
+    "real-time",
+    "responsive",
+    "dark-mode",
+    "web-app"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "start": "npx http-server -p 8000 -c-1",
+    "dev": "npx http-server -p 3000 -c-1 -o",
+    "build": "echo 'No build process needed - static files ready for deployment'",
+    "deploy": "echo 'Ready for GitHub Pages, Netlify, or Vercel deployment'",
+    "serve": "npx http-server . -p 8080 -c-1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "files": [
+    "index.html",
+    "styles.css",
+    "app.js",
+    "README.md"
+  ]
+}
