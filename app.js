@@ -1518,6 +1518,9 @@ class StockPriceCalculator {
                 }
             }
             
+            // Update data indicator first
+            this.updateDataIndicator(stockData.isLiveData);
+            
             // Create price history chart
             if (stockData.priceHistory && stockData.priceHistory.length > 0) {
                 setTimeout(() => {
@@ -1527,9 +1530,6 @@ class StockPriceCalculator {
             
             // Store the current price for calculations
             this.currentPrice = stockData.currentPrice;
-            
-            // Update data indicator
-            this.updateDataIndicator(stockData.isLiveData);
         }
         
         // Update market status
