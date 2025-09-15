@@ -1022,6 +1022,53 @@ class StockPriceCalculator {
     }
     
     /**
+     * Create a backup last-updated element if the original is not working
+     */
+    createBackupLastUpdatedElement(dataIndicator) {
+        console.log('Creating backup last-updated element');
+        
+        if (!dataIndicator) {
+            console.error('Data indicator container not found');
+            return;
+        }
+        
+        // Remove existing backup if any
+        const existingBackup = document.getElementById('last-updated-backup');
+        if (existingBackup) {
+            existingBackup.remove();
+        }
+        
+        // Create new element
+        const backupElement = document.createElement('span');
+        backupElement.id = 'last-updated-backup';
+        backupElement.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+        
+        // Apply aggressive inline styles
+        backupElement.style.cssText = `
+            color: #6b7280 !important;
+            font-size: 0.85rem !important;
+            font-weight: 500 !important;
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: static !important;
+            z-index: 999 !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            padding: 2px 6px !important;
+            border-radius: 4px !important;
+            border: 1px solid #e5e7eb !important;
+        `;
+        
+        // Append to data indicator
+        dataIndicator.appendChild(backupElement);
+        
+        console.log('Backup element created and appended');
+        
+        // Update the elements reference to use backup
+        this.elements.lastUpdated = backupElement;
+    }
+    
+    /**
      * Initialize market status with periodic updates
      */
     initMarketStatus() {
@@ -1579,6 +1626,8 @@ class StockPriceCalculator {
         // Fallback: Ensure last-updated text is visible (in case updateDataIndicator fails)
         setTimeout(() => {
             const lastUpdatedEl = document.getElementById('last-updated');
+            const dataIndicator = document.querySelector('.data-indicator');
+            
             if (lastUpdatedEl) {
                 console.log('Fallback check - lastUpdated element:', {
                     exists: !!lastUpdatedEl,
@@ -1599,8 +1648,15 @@ class StockPriceCalculator {
                 lastUpdatedEl.style.opacity = '1';
                 lastUpdatedEl.style.color = '#6b7280';
                 lastUpdatedEl.style.fontSize = '0.85rem';
+                
+                // If still not visible, create a new element
+                if (lastUpdatedEl.offsetParent === null || window.getComputedStyle(lastUpdatedEl).display === 'none') {
+                    console.error('Original element still hidden, creating new one');
+                    this.createBackupLastUpdatedElement(dataIndicator);
+                }
             } else {
-                console.error('Fallback: lastUpdated element not found!');
+                console.error('Fallback: lastUpdated element not found, creating new one');
+                this.createBackupLastUpdatedElement(dataIndicator);
             }
         }, 200);
         
