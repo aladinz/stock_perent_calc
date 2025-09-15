@@ -40,6 +40,13 @@ class StockPriceCalculator {
             notificationPrompt: document.getElementById('notification-prompt')
         };
         
+        // Debug element existence
+        console.log('Element initialization check:', {
+            lastUpdated: !!this.elements.lastUpdated,
+            lastUpdatedText: this.elements.lastUpdated?.textContent,
+            dataStatus: !!document.getElementById('data-status')
+        });
+        
         // Recent searches functionality
         this.recentSearches = [];
         this.maxRecentSearches = 8;
@@ -1388,13 +1395,18 @@ class StockPriceCalculator {
             // Old format - just a price number
             this.elements.stockSymbol.textContent = symbol;
             this.elements.currentPrice.textContent = this.formatCurrency(stockData);
-            this.elements.lastUpdated.textContent = new Date().toLocaleTimeString();
             
             // Hide enhanced elements if they exist
             const stockName = document.getElementById('stock-name');
             const stockSector = document.getElementById('stock-sector');
             if (stockName) stockName.style.display = 'none';
             if (stockSector) stockSector.style.display = 'none';
+            
+            // Store the current price for calculations
+            this.currentPrice = stockData;
+            
+            // Update data indicator for old format (always demo data)
+            this.updateDataIndicator(false);
         } else {
             // New enhanced format - full stock data object
             console.log('Displaying enhanced stock data:', stockData);
@@ -1402,11 +1414,6 @@ class StockPriceCalculator {
             // Update basic info
             this.elements.stockSymbol.textContent = stockData.ticker;
             this.elements.currentPrice.textContent = this.formatCurrency(stockData.currentPrice);
-            
-            // Set Last Updated time first
-            const currentTime = new Date().toLocaleTimeString();
-            this.elements.lastUpdated.textContent = currentTime;
-            console.log('Set lastUpdated to:', currentTime);
             
             // Update enhanced info
             const stockNameEl = document.getElementById('stock-name');
