@@ -968,6 +968,13 @@ class StockPriceCalculator {
         const dataStatus = document.getElementById('data-status');
         const lastUpdated = document.getElementById('last-updated');
         
+        console.log('updateDataIndicator called:', { 
+            isLiveData, 
+            dataStatusExists: !!dataStatus, 
+            lastUpdatedExists: !!lastUpdated,
+            currentLastUpdatedValue: lastUpdated?.textContent 
+        });
+        
         if (dataStatus && lastUpdated) {
             const now = new Date();
             const timeString = now.toLocaleTimeString();
@@ -976,13 +983,17 @@ class StockPriceCalculator {
                 dataStatus.textContent = '🔴 Live Data';
                 dataStatus.className = 'data-status live';
                 lastUpdated.textContent = `Updated: ${timeString}`;
+                console.log('Set live data lastUpdated to:', `Updated: ${timeString}`);
             } else {
                 dataStatus.textContent = '📊 Static Data';
                 dataStatus.className = 'data-status static';
                 lastUpdated.textContent = `Demo data - ${timeString}`;
+                console.log('Set demo data lastUpdated to:', `Demo data - ${timeString}`);
             }
             
             console.log('Data indicator updated:', { isLiveData, time: timeString });
+        } else {
+            console.error('updateDataIndicator: Missing elements', { dataStatus: !!dataStatus, lastUpdated: !!lastUpdated });
         }
     }
     
@@ -1391,7 +1402,11 @@ class StockPriceCalculator {
             // Update basic info
             this.elements.stockSymbol.textContent = stockData.ticker;
             this.elements.currentPrice.textContent = this.formatCurrency(stockData.currentPrice);
-            this.elements.lastUpdated.textContent = new Date().toLocaleTimeString();
+            
+            // Set Last Updated time first
+            const currentTime = new Date().toLocaleTimeString();
+            this.elements.lastUpdated.textContent = currentTime;
+            console.log('Set lastUpdated to:', currentTime);
             
             // Update enhanced info
             const stockNameEl = document.getElementById('stock-name');
