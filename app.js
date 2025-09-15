@@ -1404,9 +1404,6 @@ class StockPriceCalculator {
             
             // Store the current price for calculations
             this.currentPrice = stockData;
-            
-            // Update data indicator for old format (always demo data)
-            this.updateDataIndicator(false);
         } else {
             // New enhanced format - full stock data object
             console.log('Displaying enhanced stock data:', stockData);
@@ -1540,9 +1537,6 @@ class StockPriceCalculator {
                 }
             }
             
-            // Update data indicator first
-            this.updateDataIndicator(stockData.isLiveData);
-            
             // Create price history chart
             if (stockData.priceHistory && stockData.priceHistory.length > 0) {
                 setTimeout(() => {
@@ -1554,6 +1548,17 @@ class StockPriceCalculator {
             this.currentPrice = stockData.currentPrice;
         }
         
+        // Make stock display visible first
+        this.elements.stockDisplay.classList.remove('hidden');
+        console.log('Stock display updated and made visible');
+        
+        // Update data indicator after display is visible
+        if (typeof stockData === 'number') {
+            this.updateDataIndicator(false); // Old format - always demo
+        } else {
+            this.updateDataIndicator(stockData.isLiveData); // Enhanced format
+        }
+        
         // Update market status
         this.updateMarketStatus();
         
@@ -1562,9 +1567,6 @@ class StockPriceCalculator {
         
         // Calculate initial projection (default 5% rise)
         this.calculateProjection();
-        
-        this.elements.stockDisplay.classList.remove('hidden');
-        console.log('Stock display updated and made visible');
     }
     
     /**
