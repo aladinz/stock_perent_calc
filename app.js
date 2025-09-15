@@ -986,6 +986,10 @@ class StockPriceCalculator {
             const now = new Date();
             const timeString = now.toLocaleTimeString();
             
+            // Ensure the element is visible
+            lastUpdated.style.display = '';
+            lastUpdated.style.visibility = 'visible';
+            
             if (isLiveData) {
                 dataStatus.textContent = '🔴 Live Data';
                 dataStatus.className = 'data-status live';
@@ -998,7 +1002,15 @@ class StockPriceCalculator {
                 console.log('Set demo data lastUpdated to:', `Demo data - ${timeString}`);
             }
             
-            console.log('Data indicator updated:', { isLiveData, time: timeString });
+            // Force a repaint
+            lastUpdated.offsetHeight;
+            
+            console.log('Data indicator updated:', { 
+                isLiveData, 
+                time: timeString,
+                finalText: lastUpdated.textContent,
+                isVisible: lastUpdated.offsetParent !== null
+            });
         } else {
             console.error('updateDataIndicator: Missing elements', { dataStatus: !!dataStatus, lastUpdated: !!lastUpdated });
         }
@@ -1558,6 +1570,17 @@ class StockPriceCalculator {
         } else {
             this.updateDataIndicator(stockData.isLiveData); // Enhanced format
         }
+        
+        // Fallback: Ensure last-updated text is visible (in case updateDataIndicator fails)
+        setTimeout(() => {
+            const lastUpdatedEl = document.getElementById('last-updated');
+            if (lastUpdatedEl && (!lastUpdatedEl.textContent || lastUpdatedEl.textContent.trim() === '')) {
+                console.warn('Last updated field is empty, applying fallback');
+                lastUpdatedEl.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+                lastUpdatedEl.style.display = 'inline';
+                lastUpdatedEl.style.visibility = 'visible';
+            }
+        }, 100);
         
         // Update market status
         this.updateMarketStatus();
