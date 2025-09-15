@@ -986,9 +986,14 @@ class StockPriceCalculator {
             const now = new Date();
             const timeString = now.toLocaleTimeString();
             
-            // Ensure the element is visible
-            lastUpdated.style.display = '';
+            // Ensure the element is visible with aggressive CSS
+            lastUpdated.style.display = 'inline-block';
             lastUpdated.style.visibility = 'visible';
+            lastUpdated.style.opacity = '1';
+            lastUpdated.style.position = 'static';
+            lastUpdated.style.zIndex = '1';
+            lastUpdated.style.width = 'auto';
+            lastUpdated.style.height = 'auto';
             
             if (isLiveData) {
                 dataStatus.textContent = '🔴 Live Data';
@@ -1574,13 +1579,30 @@ class StockPriceCalculator {
         // Fallback: Ensure last-updated text is visible (in case updateDataIndicator fails)
         setTimeout(() => {
             const lastUpdatedEl = document.getElementById('last-updated');
-            if (lastUpdatedEl && (!lastUpdatedEl.textContent || lastUpdatedEl.textContent.trim() === '')) {
-                console.warn('Last updated field is empty, applying fallback');
-                lastUpdatedEl.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
-                lastUpdatedEl.style.display = 'inline';
+            if (lastUpdatedEl) {
+                console.log('Fallback check - lastUpdated element:', {
+                    exists: !!lastUpdatedEl,
+                    textContent: lastUpdatedEl.textContent,
+                    isVisible: lastUpdatedEl.offsetParent !== null,
+                    computedDisplay: window.getComputedStyle(lastUpdatedEl).display,
+                    computedVisibility: window.getComputedStyle(lastUpdatedEl).visibility
+                });
+                
+                if (!lastUpdatedEl.textContent || lastUpdatedEl.textContent.trim() === '' || lastUpdatedEl.textContent === 'Updated: Sept 14, 2025') {
+                    console.warn('Last updated field needs fallback, applying fix');
+                    lastUpdatedEl.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+                }
+                
+                // Force visibility regardless
+                lastUpdatedEl.style.display = 'inline-block';
                 lastUpdatedEl.style.visibility = 'visible';
+                lastUpdatedEl.style.opacity = '1';
+                lastUpdatedEl.style.color = '#6b7280';
+                lastUpdatedEl.style.fontSize = '0.85rem';
+            } else {
+                console.error('Fallback: lastUpdated element not found!');
             }
-        }, 100);
+        }, 200);
         
         // Update market status
         this.updateMarketStatus();
