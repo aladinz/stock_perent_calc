@@ -301,7 +301,7 @@ class StockPriceCalculator {
             existingNotice.remove();
         }
         
-        // Show demo notice
+        // Show last updated notice instead of demo notice
         const demoNotice = document.createElement('div');
         demoNotice.className = 'demo-notice';
         demoNotice.style.cssText = `
@@ -316,27 +316,25 @@ class StockPriceCalculator {
             box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
         `;
         
-        const isKnownTicker = stockData.isKnownTicker;
-        const isDemo = this.isDemoTicker(ticker);
+        const now = new Date();
+        const dateTimeString = now.toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        });
         
         demoNotice.innerHTML = `
             <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
-                <span style="font-size: 1.2em;">📊</span>
-                <strong>${isDemo ? 'Demo Mode' : (isKnownTicker ? 'Offline Mode' : 'Sample Data')}</strong>
+                <span style="font-size: 1.2em;">🕒</span>
+                <strong>Last Updated</strong>
             </div>
-            <div style="margin-bottom: 8px;">
-                ${isDemo ? 
-                    'This is demonstration data showing how the app works.' : 
-                    isKnownTicker ?
-                        `Showing realistic sample data for ${ticker}. All features are fully functional!` :
-                        `Generated sample data for "${ticker}". All features work normally.`
-                }
-            </div>
-            <div style="font-size: 0.85em; opacity: 0.8;">
-                ${isDemo ? 
-                    'Try: AAPL, GOOGL, TSLA, MSFT for realistic stock prices.' :
-                    'Set alerts, enable auto-refresh, and test notifications!'
-                }
+            <div style="font-size: 1.1em; font-weight: 500;">
+                ${dateTimeString}
             </div>
         `;
         
@@ -998,13 +996,13 @@ class StockPriceCalculator {
             if (isLiveData) {
                 dataStatus.textContent = '🔴 Live Data';
                 dataStatus.className = 'data-status live';
-                lastUpdated.textContent = `Updated: ${timeString}`;
-                console.log('Set live data lastUpdated to:', `Updated: ${timeString}`);
+                lastUpdated.textContent = `Last Updated: ${timeString}`;
+                console.log('Set live data lastUpdated to:', `Last Updated: ${timeString}`);
             } else {
                 dataStatus.textContent = '📊 Static Data';
                 dataStatus.className = 'data-status static';
-                lastUpdated.textContent = `Updated: ${timeString}`;
-                console.log('Set demo data lastUpdated to:', `Updated: ${timeString}`);
+                lastUpdated.textContent = `Last Updated: ${timeString}`;
+                console.log('Set demo data lastUpdated to:', `Last Updated: ${timeString}`);
             }
             
             // Force a repaint
@@ -1041,7 +1039,7 @@ class StockPriceCalculator {
         // Create new element
         const backupElement = document.createElement('span');
         backupElement.id = 'last-updated-backup';
-        backupElement.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+        backupElement.textContent = `Last Updated: ${new Date().toLocaleTimeString()}`;
         
         // Apply aggressive inline styles
         backupElement.style.cssText = `
