@@ -1003,8 +1003,8 @@ class StockPriceCalculator {
             } else {
                 dataStatus.textContent = '📊 Static Data';
                 dataStatus.className = 'data-status static';
-                lastUpdated.textContent = `Demo data - ${timeString}`;
-                console.log('Set demo data lastUpdated to:', `Demo data - ${timeString}`);
+                lastUpdated.textContent = `Updated: ${timeString}`;
+                console.log('Set demo data lastUpdated to:', `Updated: ${timeString}`);
             }
             
             // Force a repaint
@@ -1666,9 +1666,6 @@ class StockPriceCalculator {
         // Make stock display visible first
         this.elements.stockDisplay.classList.remove('hidden');
         console.log('Stock display updated and made visible');
-        
-        // EMERGENCY TEST: Add a visible test element to prove JavaScript is working
-        this.addEmergencyTestElement();
         
         // Update data indicator after display is visible
         if (typeof stockData === 'number') {

@@ -1387,7 +1387,6 @@ header p {
     font-weight: 500;
     display: inline-block !important;
     visibility: visible !important;
-    opacity: 1 !important;
 }
 
 /* Dark mode adjustments for data indicator */
