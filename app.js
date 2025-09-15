@@ -1069,6 +1069,57 @@ class StockPriceCalculator {
     }
     
     /**
+     * Emergency test to prove JavaScript is working
+     */
+    addEmergencyTestElement() {
+        console.log('🚨 EMERGENCY TEST: Adding bright test element');
+        
+        // Remove existing test if any
+        const existingTest = document.getElementById('emergency-test');
+        if (existingTest) {
+            existingTest.remove();
+        }
+        
+        // Find the stock display area
+        const stockDisplay = document.getElementById('stock-display');
+        if (!stockDisplay) {
+            console.error('Stock display not found!');
+            return;
+        }
+        
+        // Create an unmissable bright element
+        const testElement = document.createElement('div');
+        testElement.id = 'emergency-test';
+        testElement.innerHTML = `
+            <div style="
+                background: #ff0000 !important;
+                color: #ffffff !important;
+                padding: 10px !important;
+                margin: 10px 0 !important;
+                border: 3px solid #000000 !important;
+                font-size: 16px !important;
+                font-weight: bold !important;
+                text-align: center !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                z-index: 9999 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            ">
+                🚨 EMERGENCY TEST: JavaScript is working! 🚨<br>
+                Last Updated: ${new Date().toLocaleTimeString()}
+            </div>
+        `;
+        
+        // Add to the top of stock display
+        stockDisplay.insertBefore(testElement, stockDisplay.firstChild);
+        
+        console.log('🚨 Emergency test element added - should be BRIGHT RED and unmissable');
+    }
+    
+    /**
      * Initialize market status with periodic updates
      */
     initMarketStatus() {
@@ -1615,6 +1666,9 @@ class StockPriceCalculator {
         // Make stock display visible first
         this.elements.stockDisplay.classList.remove('hidden');
         console.log('Stock display updated and made visible');
+        
+        // EMERGENCY TEST: Add a visible test element to prove JavaScript is working
+        this.addEmergencyTestElement();
         
         // Update data indicator after display is visible
         if (typeof stockData === 'number') {
